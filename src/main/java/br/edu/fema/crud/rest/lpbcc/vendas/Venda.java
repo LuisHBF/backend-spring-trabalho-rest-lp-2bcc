@@ -1,0 +1,43 @@
+package br.edu.fema.crud.rest.lpbcc.vendas;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import br.edu.fema.crud.rest.lpbcc.funcionario.Funcionario;
+
+@Entity
+@Table(name="vendas")
+public class Venda {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@ManyToOne
+	@NotNull(message = "Informe o funcionário para registrar a venda!")
+	private Funcionario funcionario;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Funcionario getFuncionario() {
+		return funcionario;
+	}
+
+	public void setFuncionario(Funcionario funcionario) {
+		this.funcionario = funcionario;
+	}
+	
+	
+	
+}
