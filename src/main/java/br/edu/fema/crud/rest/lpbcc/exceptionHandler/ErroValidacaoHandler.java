@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import br.edu.fema.crud.rest.lpbcc.exception.AcaoNaoPermitidaException;
 import br.edu.fema.crud.rest.lpbcc.exceptionHandler.dto.ErroValidacaoDTO;
 
 @RestControllerAdvice
@@ -27,7 +28,7 @@ public class ErroValidacaoHandler {
 		List<FieldError> erros = exception.getBindingResult().getFieldErrors();
 		erros.forEach(erro -> {
 			String mensagem = this.messageSource.getMessage(erro, LocaleContextHolder.getLocale());
-			listaDTO.add(new ErroValidacaoDTO(erro.getField(), mensagem));
+			listaDTO.add(new ErroValidacaoDTO(mensagem));
 		});
 		
 		return ResponseEntity.badRequest().body(listaDTO);
@@ -36,5 +37,10 @@ public class ErroValidacaoHandler {
 	@ExceptionHandler(EmptyResultDataAccessException.class)
 	public ResponseEntity<?> emptyResultDataAccessExceptionHandler(EmptyResultDataAccessException exception){
 		return ResponseEntity.notFound().build();
+	}
+	
+	@ExceptionHandler(AcaoNaoPermitidaException.class)
+	public ResponseEntity<ErroValidacaoDTO> acaoNaoPermitidaExceptionHandler(AcaoNaoPermitidaException exception){
+		return ResponseEntity.status(exception.getStatus()).body(new ErroValidacaoDTO(exception.getMensagem()));
 	}
 }
