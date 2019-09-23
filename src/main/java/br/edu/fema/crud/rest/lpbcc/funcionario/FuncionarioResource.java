@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.fema.crud.rest.lpbcc.funcionario.dto.FuncionarioDTO;
+
 @RestController
 @RequestMapping("/funcionarios")
 public class FuncionarioResource {
@@ -28,8 +30,8 @@ public class FuncionarioResource {
 	private FuncionarioRepository funcionarioRepository;
 	
 	@GetMapping
-	public ResponseEntity<List<Funcionario>> listarFuncionarios(){
-		return ResponseEntity.ok(this.funcionarioRepository.findAll());
+	public ResponseEntity<List<FuncionarioDTO>> listarFuncionarios(){
+		return ResponseEntity.ok(FuncionarioDTO.converter(this.funcionarioRepository.findAll()));
 	}
 	
 	@ResponseStatus(code = HttpStatus.CREATED)
@@ -55,12 +57,12 @@ public class FuncionarioResource {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Funcionario> recuperarFuncionario(@PathVariable Long id){
+	public ResponseEntity<FuncionarioDTO> recuperarFuncionario(@PathVariable Long id){
 		Optional<Funcionario> funcionario = this.funcionarioRepository.findById(id);
 		if(!funcionario.isPresent())
 			throw new EmptyResultDataAccessException(1);
 
-		return ResponseEntity.ok(funcionario.get());
+		return ResponseEntity.ok(new FuncionarioDTO(funcionario.get()));
 	}
 	
 }
