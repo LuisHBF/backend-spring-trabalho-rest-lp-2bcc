@@ -1,5 +1,7 @@
 package br.edu.fema.crud.rest.lpbcc.vendas;
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +19,9 @@ public class Venda {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@NotNull(message = "Informe a data da venda!")
+	private LocalDate data;
 	
 	@ManyToOne
 	@NotNull(message = "Informe o funcionário para registrar a venda!")
@@ -28,6 +33,14 @@ public class Venda {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public LocalDate getData() {
+		return data;
+	}
+
+	public void setData(LocalDate data) {
+		this.data = data;
 	}
 
 	public Funcionario getFuncionario() {
