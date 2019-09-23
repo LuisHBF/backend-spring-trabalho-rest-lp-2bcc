@@ -1,5 +1,7 @@
 package br.edu.fema.crud.rest.lpbcc.produto;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,7 +28,12 @@ public class Produto {
 	@Min(value = 0, message="A menor quantidade em estoque possível é zero!")
 	@Column(name="quantidade_estoque")
 	private Long quantidadeEstoque;
+	
+	@NotNull(message = "Informe o valor do produto!")
+	@Min(value = 0, message="Informe um valor válido para o produto!")
+	private BigDecimal valor;
 
+	
 	public Long getId() {
 		return id;
 	}
@@ -50,5 +57,15 @@ public class Produto {
 	public void setQuantidadeEstoque(Long quantidadeEstoque) {
 		this.quantidadeEstoque = quantidadeEstoque;
 	}
+
+	public BigDecimal getValor() {
+		return valor;
+	}
+
+	public void setValor(BigDecimal valor) {
+		this.valor = valor;
+	}
+	
+	
 	
 }
