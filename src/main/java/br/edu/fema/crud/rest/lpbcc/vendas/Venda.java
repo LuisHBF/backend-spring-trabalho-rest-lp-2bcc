@@ -23,8 +23,8 @@ public class Venda {
 	@NotNull(message = "Informe a data da venda!")
 	private LocalDate data;
 	
-	@ManyToOne
 	@NotNull(message = "Informe o funcionário para registrar a venda!")
+	@ManyToOne
 	private Funcionario funcionario;
 
 	public Long getId() {
