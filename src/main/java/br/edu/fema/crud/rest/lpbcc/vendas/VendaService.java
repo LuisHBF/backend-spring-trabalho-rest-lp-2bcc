@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,7 @@ public class VendaService {
 		Optional<Funcionario> funcionario = this.funcionarioRepository.findById(idFuncionario);
 
 		if (!funcionario.isPresent())
-			throw new EmptyResultDataAccessException(1);
+			throw new AcaoNaoPermitidaException("Funcionário não encontrado!", HttpStatus.BAD_REQUEST);
 
 		List<Venda> vendas = this.vendaRepository.findAllByFuncionario(funcionario.get());
 		List<VendaDTO> retorno = new ArrayList<VendaDTO>();
@@ -54,7 +53,7 @@ public class VendaService {
 		Optional<Funcionario> funcionario = this.funcionarioRepository.findById(idFuncionario);
 
 		if (!funcionario.isPresent())
-			throw new EmptyResultDataAccessException(1);
+			throw new AcaoNaoPermitidaException("Funcionário não encontrado!", HttpStatus.BAD_REQUEST);
 
 		if (produtosFORM.size() == 0)
 			throw new AcaoNaoPermitidaException("Adicione ao menos um item na venda!", HttpStatus.BAD_REQUEST);
@@ -64,7 +63,9 @@ public class VendaService {
 			Optional<Produto> produtoSalvo = this.produtoRepository.findById(produto.getId());
 
 			if (!produtoSalvo.isPresent())
-				throw new AcaoNaoPermitidaException("Produto de código " + produto.getId() + " não encontrado!",
+				throw new AcaoNaoPermitidaException(
+						"Produto de código " + produto.getId()
+								+ " não encontrado! Nenhuma alteração foi realizada no sistema.",
 						HttpStatus.BAD_REQUEST);
 
 			if (produto.getQuantidade() > produtoSalvo.get().getQuantidadeEstoque())
@@ -72,11 +73,11 @@ public class VendaService {
 						+ produtoSalvo.get().getNome() + "(" + produto.getId() + "), porém só possuimos "
 						+ produtoSalvo.get().getQuantidadeEstoque() + " em estoque!", HttpStatus.BAD_REQUEST);
 
-			
-			produtoSalvo.get().setQuantidadeEstoque(produtoSalvo.get().getQuantidadeEstoque() - produto.getQuantidade());
-			
+			produtoSalvo.get()
+					.setQuantidadeEstoque(produtoSalvo.get().getQuantidadeEstoque() - produto.getQuantidade());
+
 			this.produtoRepository.save(produtoSalvo.get());
-			
+
 			produtos.add(produtoSalvo.get());
 		});
 

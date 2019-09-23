@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.fema.crud.rest.lpbcc.exception.AcaoNaoPermitidaException;
 import br.edu.fema.crud.rest.lpbcc.funcionario.dto.FuncionarioDTO;
 
 @RestController
@@ -50,7 +50,7 @@ public class FuncionarioResource {
 	public ResponseEntity<Funcionario> atualizarFuncionario(@PathVariable Long id, @RequestBody @Valid Funcionario funcionario){
 		Optional<Funcionario> funcionarioSalvo = this.funcionarioRepository.findById(id);
 		if(!funcionarioSalvo.isPresent())
-			throw new EmptyResultDataAccessException(1);
+			throw new AcaoNaoPermitidaException("Funcionário não encontrado!", HttpStatus.BAD_REQUEST);
 		BeanUtils.copyProperties(funcionario, funcionarioSalvo.get(),"id");
 		return ResponseEntity.ok().body(this.funcionarioRepository.save(funcionarioSalvo.get()));
 		
@@ -60,7 +60,7 @@ public class FuncionarioResource {
 	public ResponseEntity<FuncionarioDTO> recuperarFuncionario(@PathVariable Long id){
 		Optional<Funcionario> funcionario = this.funcionarioRepository.findById(id);
 		if(!funcionario.isPresent())
-			throw new EmptyResultDataAccessException(1);
+			throw new AcaoNaoPermitidaException("Funcionário não encontrado!", HttpStatus.BAD_REQUEST);
 
 		return ResponseEntity.ok(new FuncionarioDTO(funcionario.get()));
 	}

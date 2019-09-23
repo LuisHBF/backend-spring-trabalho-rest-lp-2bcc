@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import br.edu.fema.crud.rest.lpbcc.exception.AcaoNaoPermitidaException;
 
 @RestController
 @RequestMapping("/produtos")
@@ -48,7 +49,7 @@ public class ProdutoResource {
 	public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id, @RequestBody @Valid Produto produto){
 		Optional<Produto> produtoSalvo = this.produtoRepository.findById(id);
 		if(!produtoSalvo.isPresent())
-			throw new EmptyResultDataAccessException(1);
+			throw new AcaoNaoPermitidaException("Produto não encontrado!", HttpStatus.BAD_REQUEST);
 		BeanUtils.copyProperties(produto, produtoSalvo.get(),"id");
 		return ResponseEntity.ok().body(this.produtoRepository.save(produtoSalvo.get()));
 		
@@ -58,7 +59,7 @@ public class ProdutoResource {
 	public ResponseEntity<Produto> recuperarProduto(@PathVariable Long id){
 		Optional<Produto> produto = this.produtoRepository.findById(id);
 		if(!produto.isPresent())
-			throw new EmptyResultDataAccessException(1);
+			throw new AcaoNaoPermitidaException("Produto não encontrado!", HttpStatus.BAD_REQUEST);
 
 		return ResponseEntity.ok(produto.get());
 	}
