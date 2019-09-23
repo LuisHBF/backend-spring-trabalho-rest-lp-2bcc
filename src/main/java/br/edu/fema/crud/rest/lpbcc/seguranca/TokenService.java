@@ -28,9 +28,9 @@ public class TokenService {
 		informacoesUsuario.put("nome", logado.getNome());
 		
 		return Jwts.builder()
+				.setClaims(informacoesUsuario)
 				.setIssuer("API do Luizão")
 				.setIssuedAt(hoje)
-				.setClaims(informacoesUsuario)
 				.setSubject(logado.getId().toString())
 				.setExpiration(new Date(hoje.getTime() + TokenService.TEMPO_JWT))
 				.signWith(SignatureAlgorithm.HS256, TokenService.SENHA_API)
