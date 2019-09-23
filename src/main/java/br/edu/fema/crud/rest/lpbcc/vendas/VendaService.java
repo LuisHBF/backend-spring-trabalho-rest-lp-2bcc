@@ -69,7 +69,7 @@ public class VendaService {
 						HttpStatus.BAD_REQUEST);
 
 			if (produto.getQuantidade() > produtoSalvo.get().getQuantidadeEstoque())
-				throw new AcaoNaoPermitidaException("Você está solicitando " + produto.getQuantidade() + " do produto "
+				throw new AcaoNaoPermitidaException("Você está solicitando " + produto.getQuantidade() + " unidades do produto "
 						+ produtoSalvo.get().getNome() + "(" + produto.getId() + "), porém só possuimos "
 						+ produtoSalvo.get().getQuantidadeEstoque() + " em estoque!", HttpStatus.BAD_REQUEST);
 
